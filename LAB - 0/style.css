@@ -1,0 +1,105 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.container {
+    background-color: white;
+    padding: 40px;
+    width: 500px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+/* Header Styling */
+.main-title {
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+/* The Red Line */
+.red-line {
+    border: 0;
+    height: 3px;
+    background-color: red;
+    margin-bottom: 30px;
+}
+
+/* Home Page Menu Styling */
+.menu-section ul {
+    list-style-position: inside; /* Keeps bullets inside center alignment */
+    padding: 0;
+    font-size: 18px;
+    line-height: 2;
+    text-align: left; /* Aligns text left, but the block is centered */
+    display: inline-block; /* Helps center the list block itself */
+}
+
+.link-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.reg-link {
+    color: blue;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.reg-link:hover {
+    text-decoration: underline;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box; /* Ensures padding doesn't widen the input box */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button Styling */
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.reset-btn {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
