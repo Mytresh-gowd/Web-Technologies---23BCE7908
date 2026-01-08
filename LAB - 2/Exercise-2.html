@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise 2: Multimedia</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center; /* Center everything */
+            background-color: #d8ecec;
+        }
+        .media-container {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            width: 60%;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+        .time-display {
+            font-weight: bold;
+            color: #d32f2f; /* Red color for the timer */
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="media-container">
+        <h2>Audio Player</h2>
+        
+        <audio id="myAudio" controls ontimeupdate="updateAudioTime()">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="time-display">
+            Time: <span id="audioTimer">0.00</span> seconds
+        </div>
+    </div>
+
+
+    <div class="media-container">
+        <h2>Video Player</h2>
+
+        <video id="myVideo" width="400" controls ontimeupdate="updateVideoTime()">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="time-display">
+            Time: <span id="videoTimer">0.00</span> seconds
+        </div>
+    </div>
+
+    <script>
+        // FUNCTION 1: Updates the Audio Timer
+        function updateAudioTime() {
+            // 1. Get the audio player element (The "Radio")
+            var audioPlayer = document.getElementById("myAudio");
+            
+            // 2. Get the span where we want to write the time
+            var displaySpan = document.getElementById("audioTimer");
+
+            // 3. Read the 'currentTime' from the player and write it to the span
+            // .toFixed(2) creates a number with 2 decimal places (e.g., 1.54)
+            displaySpan.innerHTML = audioPlayer.currentTime.toFixed(2);
+        }
+
+        // FUNCTION 2: Updates the Video Timer
+        function updateVideoTime() {
+            // 1. Get the video player element (The "TV")
+            var videoPlayer = document.getElementById("myVideo");
+            
+            // 2. Get the span for video time
+            var displaySpan = document.getElementById("videoTimer");
+
+            // 3. Update the text
+            displaySpan.innerHTML = videoPlayer.currentTime.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
