@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Exercise 1</title>
+    <style>
+        /* Optional: Adding a border so we can see the canvas boundaries clearly */
+        canvas {
+            border: 2px solid black;
+            background-color: #ffffff; /* Light gray background */
+            display: block;
+            margin: 20px auto; /* Centers the canvas */
+        }
+        body{
+            background-color: rgba(154, 255, 255, 0.825);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="myCanvas" width="500" height="300">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+
+    <script>
+        
+        var c = document.getElementById("myCanvas"); // Find the canvas element
+        var ctx = c.getContext("2d"); // Create a 2D drawing object (the "brush")
+
+        // --- DRAWING A FILLED RECTANGLE ---
+        ctx.fillStyle = "blue";      // Set the color (ink)
+        // Syntax: fillRect(x, y, width, height)
+        // This draws a blue rectangle at x=50, y=50
+        ctx.fillRect(50, 50, 150, 100); 
+
+
+        // --- DRAWING A STRAIGHT LINE ---
+        ctx.beginPath();             // Tell the brush we are starting a new shape/path
+        ctx.moveTo(250, 50);         // Lift the pen and place it at start point (x, y)
+        ctx.lineTo(450, 50);         // Draw a line to the end point
+        ctx.lineWidth = 5;           // Set line thickness
+        ctx.strokeStyle = "red";     // Set line color
+        ctx.stroke();                // Actually draw the line on the paper
+
+
+        // --- DRAWING A FILLED CIRCLE ---
+        ctx.beginPath();             // Start a new path so it doesn't connect to the line
+        ctx.fillStyle = "green";     // Set color for the circle
+        
+        // Syntax: arc(x, y, radius, startAngle, endAngle)
+        // Math.PI * 2 represents a full 360-degree circle
+        ctx.arc(350, 150, 40, 0, 2 * Math.PI); 
+        ctx.fill();                  // Fill the circle with green
+
+
+        // --- DRAWING TEXT ---
+        ctx.font = "30px Arial";     // Set font size and family
+        ctx.fillStyle = "black";     // Set text color
+        // Syntax: fillText(text, x, y)
+        ctx.fillText("HTML5 Canvas", 150, 270); 
+
+    </script>
+
+</body>
+</html>
