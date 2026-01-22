@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Registration System</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --error: #ff4d4d;
+            --success: #2ecc71;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        
+        h2 { text-align: center; color: #333; margin-top: 0; }
+
+        .form-group { margin-bottom: 15px; position: relative; }
+
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9rem; }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* Real-time highlighting */
+        input.invalid { border-color: var(--error); background-color: #fffafa; }
+        input.valid { border-color: var(--success); }
+
+        .error-msg { color: var(--error); font-size: 0.75rem; margin-top: 4px; display: none; }
+
+        .pass-strength {
+            height: 4px;
+            width: 100%;
+            background: #eee;
+            margin-top: 5px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar { height: 100%; width: 0%; transition: 0.3s; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        #skillsSection { animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>User Registration</h2>
+    <form id="regForm" novalidate>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+            <label>Role</label>
+            <select id="role">
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label id="emailLabel">Email (@edu.com)</label>
+            <input type="email" id="email" placeholder="email@domain.com" required>
+            <div id="emailError" class="error-msg">Invalid domain for selected role.</div>
+        </div>
+
+        <div class="form-group" id="skillsSection" style="display:none;">
+            <label>Skills / Expertise</label>
+            <input type="text" id="skills" placeholder="e.g. JavaScript, Python">
+        </div>
+
+        <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="age" required>
+            <div id="ageError" class="error-msg">You don't meet the minimum age.</div>
+        </div>
+
+        <div class="form-group">
+            <label id="passLabel">Password (Strength: Low)</label>
+            <input type="password" id="password" required>
+            <div class="pass-strength"><div id="strengthBar" class="strength-bar"></div></div>
+        </div>
+
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" required>
+            <div id="matchError" class="error-msg">Passwords do not match.</div>
+        </div>
+
+        <button type="submit" id="submitBtn" disabled>Complete Registration</button>
+    </form>
+</div>
+
+<script>
+    // 1. Dynamic Configuration Object
+    const roleRules = {
+        Student: { minAge: 16, domain: "@edu.com", minStrength: 1, label: "Low" },
+        Teacher: { minAge: 21, domain: "@school.org", minStrength: 2, label: "Medium" },
+        Admin: { minAge: 25, domain: "@admin.com", minStrength: 3, label: "High" }
+    };
+
+    const form = document.getElementById('regForm');
+    const roleSelect = document.getElementById('role');
+    const emailInput = document.getElementById('email');
+    const ageInput = document.getElementById('age');
+    const passInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const skillsSection = document.getElementById('skillsSection');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 2. Helper: Update UI Feedback
+    function setValidity(element, errorElement, isValid) {
+        if (isValid) {
+            element.classList.remove('invalid');
+            element.classList.add('valid');
+            if(errorElement) errorElement.style.display = 'none';
+        } else {
+            element.classList.remove('valid');
+            element.classList.add('invalid');
+            if(errorElement) errorElement.style.display = 'block';
+        }
+    }
+
+    // 3. Password Strength Logic
+    function getPassStrength(pass) {
+        let score = 0;
+        if (pass.length >= 6) score++; // Length
+        if (/[A-Z]/.test(pass)) score++; // Uppercase
+        if (/[0-9]/.test(pass)) score++; // Number
+        if (/[^A-Za-z0-9]/.test(pass)) score++; // Special Char
+        return score;
+    }
+
+    // 4. Core Validation Engine
+    function validate() {
+        const role = roleSelect.value;
+        const rules = roleRules[role];
+        let formIsValid = true;
+
+        // Update Labels based on Role
+        document.getElementById('emailLabel').innerText = `Email (${rules.domain})`;
+        document.getElementById('passLabel').innerText = `Password (Required: ${rules.label})`;
+
+        // Show/Hide Skills for Teacher
+        skillsSection.style.display = (role === 'Teacher') ? 'block' : 'none';
+
+        // Validate Age
+        const isAgeValid = parseInt(ageInput.value) >= rules.minAge;
+        setValidity(ageInput, document.getElementById('ageError'), isAgeValid);
+        if(!isAgeValid) formIsValid = false;
+
+        // Validate Email Domain
+        const isEmailValid = emailInput.value.endsWith(rules.domain);
+        setValidity(emailInput, document.getElementById('emailError'), isEmailValid);
+        if(!isEmailValid) formIsValid = false;
+
+        // Validate Password Strength
+        const strength = getPassStrength(passInput.value);
+        const isPassStrong = strength >= rules.minStrength;
+        const bar = document.getElementById('strengthBar');
+        
+        // Visual bar color
+        const colors = ['#eee', '#ff4d4d', '#ffa500', '#2ecc71', '#009432'];
+        bar.style.width = (strength * 25) + "%";
+        bar.style.backgroundColor = colors[strength];
+        setValidity(passInput, null, isPassStrong);
+        if(!isPassStrong) formIsValid = false;
+
+        // Validate Confirm Password
+        const doesMatch = confirmInput.value === passInput.value && passInput.value !== "";
+        setValidity(confirmInput, document.getElementById('matchError'), doesMatch);
+        if(!doesMatch) formIsValid = false;
+
+        // Check generic requirements for Name
+        if(document.getElementById('name').value.length < 2) formIsValid = false;
+
+        // Final Button Toggle
+        submitBtn.disabled = !formIsValid;
+    }
+
+    // 5. Event Listeners
+    roleSelect.addEventListener('change', validate);
+    form.addEventListener('input', validate);
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert("Success! Form data is valid and ready for the server.");
+    });
+</script>
+
+</body>
+</html>
