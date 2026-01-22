@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Stage Workflow Engine</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --success: #10b981;
+            --bg: #f3f4f6;
+            --error: #ef4444;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .wizard-card { background: white; width: 500px; padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        /* Progress Bar */
+        .progress-container { margin-bottom: 30px; background: #e5e7eb; height: 8px; border-radius: 10px; overflow: hidden; }
+        #progress-bar { background: var(--primary); height: 100%; width: 25%; transition: 0.4s ease; }
+
+        /* Stage Visibility */
+        .form-stage { display: none; }
+        .form-stage.active { display: block; animation: fadeIn 0.4s; }
+
+        h2 { margin-top: 0; font-size: 1.25rem; color: #111827; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
+        input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
+        
+        .error-text { color: var(--error); font-size: 0.8rem; margin-top: 4px; display: none; }
+        .invalid input { border-color: var(--error); }
+        .invalid .error-text { display: block; }
+
+        .controls { display: flex; justify-content: space-between; margin-top: 30px; }
+        button { padding: 10px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-next { background: var(--primary); color: white; }
+        .btn-prev { background: #e5e7eb; color: #374151; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="wizard-card">
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <p id="step-indicator" style="font-size: 0.8rem; color: #6b7280; font-weight: bold; margin-bottom: 10px;">STAGE 1 OF 4</p>
+
+    <form id="workflow-form">
+        <div class="form-stage active" data-stage="1">
+            <h2>Account Identity</h2>
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="John Doe">
+                <div class="error-text">Name must be at least 3 characters.</div>
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="john@example.com">
+                <div class="error-text">Enter a valid email address.</div>
+            </div>
+        </div>
+
+        <div class="form-stage" data-stage="2">
+            <h2>Security Details</h2>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••">
+                <div class="error-text">Minimum 8 characters required.</div>
+            </div>
+        </div>
+
+        <div class="form-stage" data-stage="3">
+            <h2>Preferences</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="johndoe123">
+                <div class="error-text">Username is required.</div>
+            </div>
+        </div>
+
+        <div class="form-stage" data-stage="4">
+            <h2>Review & Submit</h2>
+            <div id="summary" style="background: #f9fafb; padding: 15px; border-radius: 8px; font-size: 0.9rem;">
+                </div>
+            <p style="font-size: 0.8rem; margin-top: 10px;">By submitting, you agree to our terms.</p>
+        </div>
+
+        <div class="controls">
+            <button type="button" class="btn-prev" id="prevBtn" onclick="changeStage(-1)" disabled>Previous</button>
+            <button type="button" class="btn-next" id="nextBtn" onclick="changeStage(1)">Next Step</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 1. Temporary Data Storage
+    let currentStage = 1;
+    const totalStages = 4;
+    const formData = {};
+
+    // 2. Validation Rules for Each Stage
+    const validationRules = {
+        1: () => {
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            let valid = true;
+
+            if (name.value.trim().length < 3) {
+                toggleError(name, true);
+                valid = false;
+            } else { toggleError(name, false); }
+
+            if (!email.value.includes('@')) {
+                toggleError(email, true);
+                valid = false;
+            } else { toggleError(email, false); }
+
+            if (valid) {
+                formData.name = name.value;
+                formData.email = email.value;
+            }
+            return valid;
+        },
+        2: () => {
+            const pass = document.getElementById('password');
+            if (pass.value.length < 8) {
+                toggleError(pass, true);
+                return false;
+            }
+            toggleError(pass, false);
+            formData.password = pass.value;
+            return true;
+        },
+        3: () => {
+            const user = document.getElementById('username');
+            if (user.value.trim() === "") {
+                toggleError(user, true);
+                return false;
+            }
+            toggleError(user, false);
+            formData.username = user.value;
+            return true;
+        },
+        4: () => true // Confirmation stage
+    };
+
+    function toggleError(inputEl, isError) {
+        const group = inputEl.parentElement;
+        if (isError) group.classList.add('invalid');
+        else group.classList.remove('invalid');
+    }
+
+    // 3. Navigation Controller
+    function changeStage(delta) {
+        // If moving forward, validate current stage first
+        if (delta === 1 && !validationRules[currentStage]()) {
+            return;
+        }
+
+        currentStage += delta;
+
+        if (currentStage > totalStages) {
+            submitForm();
+            return;
+        }
+
+        updateUI();
+    }
+
+    // 4. DOM Manipulation (Show/Hide/Update)
+    function updateUI() {
+        // Update Progress Bar
+        const progress = (currentStage / totalStages) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('step-indicator').innerText = `STAGE ${currentStage} OF ${totalStages}`;
+
+        // Toggle Stage Visibility
+        document.querySelectorAll('.form-stage').forEach(stage => {
+            stage.classList.remove('active');
+            if (parseInt(stage.dataset.stage) === currentStage) {
+                stage.classList.add('active');
+            }
+        });
+
+        // Update Buttons
+        document.getElementById('prevBtn').disabled = currentStage === 1;
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.innerText = currentStage === totalStages ? "Confirm & Submit" : "Next Step";
+
+        // Inject summary if on last stage
+        if (currentStage === 4) {
+            document.getElementById('summary').innerHTML = `
+                <strong>Name:</strong> ${formData.name}<br>
+                <strong>Email:</strong> ${formData.email}<br>
+                <strong>Username:</strong> ${formData.username}
+            `;
+        }
+    }
+
+    function submitForm() {
+        console.log("Final Form Submission Data:", formData);
+        alert("Form Submitted Successfully! Check console for stored data.");
+        // Reset or redirect
+        window.location.reload();
+    }
+
+    // Initialize Progress Bar
+    updateUI();
+</script>
+
+</body>
+</html>
