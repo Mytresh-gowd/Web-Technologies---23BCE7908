@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Monitor - Event Phases</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --accent: #38bdf8;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #f8fafc;
+        }
+
+        body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); display: flex; height: 100vh; margin: 0; overflow: hidden; }
+
+        /* Interaction Zone */
+        .workspace { flex: 1; padding: 40px; display: flex; flex-direction: column; gap: 20px; border-right: 2px solid #334155; }
+        .interactive-element { padding: 20px; background: var(--panel); border: 2px solid var(--accent); border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .interactive-element:hover { background: #2d3e50; }
+        input { padding: 12px; border-radius: 4px; border: none; font-size: 1rem; width: 100%; box-sizing: border-box;}
+
+        /* Monitor Panel */
+        .monitor { width: 450px; display: flex; flex-direction: column; background: #000; }
+        .monitor-header { padding: 15px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; background: #111; }
+        #log-container { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.8rem; }
+
+        .log-entry { margin-bottom: 6px; border-left: 3px solid var(--accent); padding-left: 10px; padding-bottom: 4px; border-bottom: 1px solid #222; }
+        .log-time { color: #64748b; font-size: 0.7rem; }
+        .log-phase { font-size: 0.7rem; padding: 1px 4px; border-radius: 3px; margin-left: 5px; }
+        .phase-capture { background: #4f46e5; color: white; }
+        .phase-bubble { background: #0891b2; color: white; }
+
+        /* Alerts */
+        #alert-box { position: fixed; top: 20px; right: 470px; background: var(--danger); color: white; padding: 15px 25px; border-radius: 4px; display: none; z-index: 100; font-weight: bold; }
+
+        .controls { padding: 15px; display: flex; gap: 10px; background: #111; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; }
+        .btn-reset { background: var(--danger); color: white; }
+        .btn-export { background: var(--accent); color: #000; }
+    </style>
+</head>
+<body>
+
+<div id="alert-box">⚠️ SUSPICIOUS ACTIVITY: RAPID CLICKING DETECTED</div>
+
+<div class="workspace" id="main-container">
+    <h2>Interaction Workspace</h2>
+    <p>Every interaction here is logged via delegation.</p>
+    
+    <div class="interactive-element" id="btn-target-1">Target Element A</div>
+    <div class="interactive-element" id="btn-target-2">Target Element B</div>
+    
+    <input type="text" id="user-input" placeholder="Type here to log key presses...">
+    
+    <div style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8;">
+        <strong>How it works:</strong>
+        <ul>
+            <li>Blue logs = <b>Capture Phase</b> (Event moving down)</li>
+            <li>Teal logs = <b>Bubble Phase</b> (Event moving up)</li>
+            <li>Click quickly (>5 times/sec) to trigger warning.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="monitor">
+    <div class="monitor-header">
+        <span>&gt;_ LIVE_ACTIVITY_LOG</span>
+        <span id="activity-count" style="color: var(--accent)">0</span>
+    </div>
+    <div id="log-container"></div>
+    <div class="controls">
+        <button class="btn btn-export" onclick="exportLog()">Export TXT</button>
+        <button class="btn btn-reset" onclick="resetLog()">Reset Log</button>
+    </div>
+</div>
+
+<script>
+    let activities = [];
+    let clickTimestamps = [];
+    const container = document.getElementById('main-container');
+    const logContainer = document.getElementById('log-container');
+    const alertBox = document.getElementById('alert-box');
+
+    // 1 & 3. Track events using Bubbling and Capturing
+    // Listen on the container for delegation
+    
+    // CAPTURING PHASE (useCapture = true)
+    container.addEventListener('click', (e) => {
+        logEvent(e, 'Capture');
+        checkSuspiciousClicks();
+    }, true);
+
+    // BUBBLING PHASE (useCapture = false)
+    container.addEventListener('click', (e) => {
+        logEvent(e, 'Bubble');
+    }, false);
+
+    // Key Press and Focus Tracking
+    container.addEventListener('keyup', (e) => logEvent(e, 'Bubble'));
+    container.addEventListener('focusin', (e) => logEvent(e, 'Bubble'));
+
+    // 2. Store activity in array
+    function logEvent(e, phase) {
+        const entry = {
+            timestamp: new Date().toLocaleTimeString(),
+            type: e.type.toUpperCase(),
+            target: e.target.id || e.target.tagName,
+            phase: phase
+        };
+        
+        activities.push(entry);
+        updateDisplay(entry);
+    }
+
+    // 4. Dynamically display log
+    function updateDisplay(entry) {
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        const phaseClass = entry.phase === 'Capture' ? 'phase-capture' : 'phase-bubble';
+        
+        div.innerHTML = `
+            <span class="log-time">[${entry.timestamp}]</span>
+            <strong>${entry.type}</strong> on <em>${entry.target}</em>
+            <span class="log-phase ${phaseClass}">${entry.phase}</span>
+        `;
+        
+        logContainer.prepend(div);
+        document.getElementById('activity-count').innerText = activities.length;
+    }
+
+    // 5. Suspicious Activity Thresholds
+    function checkSuspiciousClicks() {
+        const now = Date.now();
+        clickTimestamps.push(now);
+        
+        // Only keep clicks from the last 2 seconds
+        clickTimestamps = clickTimestamps.filter(ts => now - ts < 2000);
+
+        if (clickTimestamps.length > 5) {
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 3000);
+        }
+    }
+
+    // 6. Reset and Export
+    function resetLog() {
+        activities = [];
+        logContainer.innerHTML = '';
+        document.getElementById('activity-count').innerText = '0';
+    }
+
+    function exportLog() {
+        if (activities.length === 0) return alert("Nothing to export!");
+        
+        const content = activities.map(a => 
+            `[${a.timestamp}] TYPE: ${a.type} | TARGET: ${a.target} | PHASE: ${a.phase}`
+        ).join('\n');
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `activity_log_${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
