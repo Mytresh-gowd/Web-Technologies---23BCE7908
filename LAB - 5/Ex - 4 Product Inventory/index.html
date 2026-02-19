@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Inventory System</title>
+    <style>
+        body { font-family: Arial; margin:40px; background:#f4f4f4; }
+        input { padding:6px; margin:5px; }
+        button { padding:6px 12px; margin:5px; }
+        table { border-collapse:collapse; width:100%; margin-top:20px; }
+        th, td { border:1px solid #ddd; padding:8px; text-align:center; }
+        th { background:#222; color:white; }
+        .low-stock { background-color:#ffcccc; }
+        .success { color:green; font-weight:bold; }
+        .error { color:red; font-weight:bold; }
+        .card { background:white; padding:20px; border-radius:8px; box-shadow:0 3px 6px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+<h2>📦 Product Inventory System</h2>
+
+<input type="text" id="id" placeholder="Product ID">
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="category" placeholder="Category">
+<input type="number" id="price" placeholder="Price">
+<input type="number" id="stock" placeholder="Stock">
+
+<button onclick="addProduct()">Add</button>
+<button onclick="updateProduct()">Update</button>
+
+<input type="text" id="searchCategory" placeholder="Search by Category">
+<button onclick="searchByCategory()">Search</button>
+
+<div id="message"></div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="inventoryTable"></tbody>
+</table>
+
+<h3>Total Inventory Value: ₹ <span id="totalValue">0</span></h3>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Book Tracker (XML)</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background:#f4f4f4; }
+        input { padding:6px; margin:5px; }
+        button { padding:6px 12px; margin:5px; }
+        table { border-collapse: collapse; width:100%; margin-top:20px; }
+        th, td { border:1px solid #ddd; padding:8px; text-align:center; }
+        th { background:#222; color:white; }
+        .card { background:white; padding:20px; border-radius:8px; box-shadow:0 3px 6px rgba(0,0,0,0.2);}
+        .success { color:green; font-weight:bold; }
+        .error { color:red; font-weight:bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+<h2>📚 Library Book Tracker (XML + AJAX)</h2>
+
+<input type="text" id="id" placeholder="Book ID">
+<input type="text" id="title" placeholder="Title">
+<input type="text" id="author" placeholder="Author">
+<select id="status">
+    <option value="Available">Available</option>
+    <option value="Issued">Issued</option>
+</select>
+
+<button onclick="addBook()">Add Book</button>
+<button onclick="updateBook()">Update Status</button>
+
+<div id="message"></div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="bookTable"></tbody>
+</table>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Management (XML)</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background:#f4f4f4; }
+        input { padding: 6px; margin: 5px; }
+        button { padding: 6px 12px; margin: 5px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align:center; }
+        th { background:#333; color:white; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .card { background:white; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+<h2>Employee Management System (XML + AJAX)</h2>
+
+<input type="text" id="id" placeholder="Employee ID">
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="department" placeholder="Department">
+<input type="number" id="salary" placeholder="Salary">
+
+<button onclick="addEmployee()">Add</button>
+<button onclick="updateEmployee()">Update</button>
+
+<div id="message"></div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="employeeTable"></tbody>
+</table>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
