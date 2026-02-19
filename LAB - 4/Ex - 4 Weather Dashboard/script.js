@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY";  // Replace with your API key
+const apiKey = "92feda036842d6c0a5b3348e48c3686c";  // Replace with your API key
 const statusDiv = document.getElementById("status");
 const weatherBox = document.getElementById("weatherBox");
 
@@ -59,3 +59,4 @@ function displayWeather(data) {
         <p>☁ Condition: ${data.weather[0].description}</p>
     `;
 }
+
