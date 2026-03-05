@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Notes Manager</title>
+</head>
+
+<body>
+
+<h2>Add Note</h2>
+
+<input id="title" placeholder="Title"><br><br>
+<input id="subject" placeholder="Subject"><br><br>
+<textarea id="description" placeholder="Description"></textarea><br><br>
+
+<button onclick="addNote()">Add Note</button>
+
+<h2>Notes List</h2>
+
+<button onclick="loadNotes()">Load Notes</button>
+
+<ul id="notesList"></ul>
+
+<script>
+
+async function addNote(){
+
+let title = document.getElementById("title").value
+let subject = document.getElementById("subject").value
+let description = document.getElementById("description").value
+
+await fetch("http://localhost:3000/notes",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+title:title,
+subject:subject,
+description:description
+})
+
+})
+
+alert("Note Added")
+
+}
+
+async function loadNotes(){
+
+let res = await fetch("http://localhost:3000/notes")
+
+let data = await res.json()
+
+let list = document.getElementById("notesList")
+
+list.innerHTML=""
+
+data.forEach(note=>{
+
+let li = document.createElement("li")
+
+li.innerText = note.title + " - " + note.subject
+
+list.appendChild(li)
+
+})
+
+}
+
+</script>
+
+</body>
+</html>
