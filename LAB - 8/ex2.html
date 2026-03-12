@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Object Updation</title>
+</head>
+
+<body>
+
+<h2>Student Grade Analysis :</h2>
+
+<div class="container">
+
+<p>Enter Student Name :</p>
+<input type="text" id="NAME" placeholder="JADAL"><br>
+
+<p>Enter Student ID :</p>
+<input type="number" id="id" placeholder="69"><br>
+
+<p>Enter Student Department :</p>
+<input type="text" id="Dep" placeholder="CSE"><br>
+
+<p>Enter Student Marks :</p>
+<input type="number" id="marks" placeholder="69"><br><br>
+
+<button onclick="InitialInfo()">Show Details</button>
+
+</div>
+
+<div class="container">
+
+<h2>Grade Based Info :</h2>
+<button onclick="UpdatedInfo()">Updated Details</button>
+
+</div>
+
+<script>
+
+// Grade calculation function
+function getGrade(Marks){
+
+    if(Marks > 90){
+        return 'A';
+    }
+    else if(Marks > 60){
+        return 'B';
+    }
+    else{
+        return 'C';
+    }
+
+}
+
+// Show initial info
+function InitialInfo(){
+
+    let name = document.getElementById("NAME").value;
+    let ID = document.getElementById("id").value;
+    let Department = document.getElementById("Dep").value;
+    let Marks = Number(document.getElementById("marks").value);
+
+    console.log(`ID : ${ID}`);
+    console.log(`Name : ${name}`);
+    console.log(`Department : ${Department}`);
+    console.log(`Marks : ${Marks}`);
+
+    document.write(`ID : ${ID}`);
+    document.write(`Name : ${name}`);
+    document.write(`Department : ${Department}`);
+    document.write(`Marks : ${Marks}`);
+
+}
+
+// Show updated info with grade
+function UpdatedInfo(){
+
+    let name = document.getElementById("NAME").value;
+    let ID = document.getElementById("id").value;
+    let Department = document.getElementById("Dep").value;
+    let Marks = Number(document.getElementById("marks").value);
+
+    let Grade = getGrade(Marks);
+
+    console.log(`ID : ${ID}`);
+    console.log(`Name : ${name}`);
+    console.log(`Department : ${Department}`);
+    console.log(`Marks : ${Marks}`);
+    console.log(`Grade : ${Grade}`);
+
+    document.write(`ID : ${ID}`);
+    document.write(`Name : ${name}`);
+    document.write(`Department : ${Department}`);
+    document.write(`Marks : ${Marks}`);
+    document.write(`Grade : ${Grade}`);
+
+}
+
+</script>
+
+</body>
+</html>
