@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+</head>
+<body>
+    <!---By taking inputs we will get the info of student name and marks and giving the output-->
+    <h1>Student Average Marks :</h1>
+    <div class = "container">
+        <p>Enter Your Name :</p><br><br>
+        <input type =  "text" id = "NAME" placeholder="Ganesh" required>
+        <p>Enter the Marks of Students :</p>
+        <p>Mark - 1:</p><br><br>
+        <input type = "number" id = "M1" placeholder = "69" required>
+        <p>Mark - 2:</p><br><br>
+        <input type = "number" id = "M2" placeholder = "7" required>
+        <p>Mark - 3:</p><br><br>
+        <input type = "number" id = "M3" placeholder = "99" required>
+
+        <button onclick = "calcAverage()">Submit</button>
+
+
+    </div>
+    <script>
+        //Developing the Logic for this Thing :
+        function calcAverage(){
+            let N = document.getElementById("NAME").value;
+            let a = Number(document.getElementById("M1").value);
+            let b = Number(document.getElementById("M2").value);
+            let c = Number(document.getElementById("M3").value);
+
+            const Avg = (a,b,c) =>{
+                return (a+b+c)/3;
+            }
+            let Average = Avg(a,b,c);
+            console.log(a+" "+b+" "+c);
+            console.log(`Student Name : ${N}`);
+            console.log(`Average Marks : ${Average}`);
+
+            document.write("Student Name : "+N);
+            document.write("Average Marks : "+Average);
+        }
+    </script>
+    
+</body>
+</html>
