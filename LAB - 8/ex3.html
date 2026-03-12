@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Course Enrollment System</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:40px;
+}
+
+.container{
+    border:1px solid #ccc;
+    padding:20px;
+    width:350px;
+}
+
+button{
+    margin-top:10px;
+    padding:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Course Enrollment System</h2>
+
+<div class="container">
+
+<p>Enter Course Name</p>
+<input type="text" id="course" placeholder="Web Technologies">
+
+<p>Enter Instructor Name</p>
+<input type="text" id="instructor" placeholder="Dr. Kumar">
+
+<p>Seats Available?</p>
+<select id="seats">
+<option value="true">Yes</option>
+<option value="false">No</option>
+</select>
+
+<br><br>
+
+<button onclick="enroll()">Enroll Course</button>
+
+<h3 id="output"></h3>
+
+</div>
+
+<script>
+
+// ES6 Class
+class Course{
+
+    constructor(courseName,instructor){
+        this.courseName = courseName;
+        this.instructor = instructor;
+    }
+
+    displayCourse(){
+        return `Course: ${this.courseName}, Instructor: ${this.instructor}`;
+    }
+
+}
+
+function enroll(){
+
+    let courseName = document.getElementById("course").value;
+    let instructor = document.getElementById("instructor").value;
+    let seats = document.getElementById("seats").value;
+
+    let seatsAvailable = (seats === "true");
+
+    let course1 = new Course(courseName,instructor);
+
+    let enrollCourse = new Promise((resolve,reject)=>{
+
+        if(seatsAvailable){
+            resolve("Enrollment Successful");
+        }
+        else{
+            reject("Course Full");
+        }
+
+    });
+
+    enrollCourse
+    .then(msg=>{
+        document.getElementById("output").innerHTML =
+        course1.displayCourse()+"<br>"+msg;
+    })
+    .catch(err=>{
+        document.getElementById("output").innerHTML =
+        course1.displayCourse()+"<br>"+err;
+    });
+
+}
+
+</script>
+
+</body>
+</html>
