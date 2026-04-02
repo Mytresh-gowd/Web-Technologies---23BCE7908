@@ -1,0 +1,12 @@
+.App { font-family: sans-serif; text-align: center; padding: 20px; }
+.grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.user-card { 
+  border: 1px solid #ddd; 
+  padding: 15px; 
+  width: 250px; 
+  border-radius: 8px; 
+  text-align: left;
+  background: #fdfdfd;
+}
+.loader { font-size: 20px; color: blue; margin-top: 50px; }
+.error-msg { color: red; font-weight: bold; margin-top: 50px; }
