@@ -1,0 +1,17 @@
+{
+"name": "exercise3-events",
+"version": "1.0.0",
+"description": "Node.js event-driven programming using EventEmitter",
+"main": "eventApp.js",
+"scripts": {
+"start": "node eventApp.js"
+},
+"keywords": [
+"nodejs",
+"events",
+"eventemitter",
+"assignment"
+],
+"author": "Your Name",
+"license": "ISC"
+}

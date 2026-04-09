@@ -1,0 +1,18 @@
+{
+"name": "exercise2-file-operations",
+"version": "1.0.0",
+"description": "Node.js file system operations using fs module",
+"main": "fileOps.js",
+"scripts": {
+"start": "node fileOps.js",
+"dev": "node fileOps.js"
+},
+"keywords": [
+"nodejs",
+"filesystem",
+"fs",
+"assignment"
+],
+"author": "Your Name",
+"license": "ISC"
+}
