@@ -1,0 +1,21 @@
+{
+"name": "exercise4-rest-api",
+"version": "1.0.0",
+"description": "RESTful API using Express.js for managing users",
+"main": "server.js",
+"scripts": {
+"start": "node server.js",
+"dev": "node server.js"
+},
+"keywords": [
+"nodejs",
+"express",
+"rest-api",
+"assignment"
+],
+"author": "Your Name",
+"license": "ISC",
+"dependencies": {
+"express": "^4.18.2"
+}
+}

@@ -1,0 +1,22 @@
+{
+"name": "exercise6-mongodb-crud",
+"version": "1.0.0",
+"description": "Node.js CRUD application using MongoDB and Mongoose",
+"main": "server.js",
+"scripts": {
+"start": "node server.js"
+},
+"keywords": [
+"nodejs",
+"mongodb",
+"mongoose",
+"crud",
+"assignment"
+],
+"author": "Your Name",
+"license": "ISC",
+"dependencies": {
+"express": "^4.18.2",
+"mongoose": "^7.0.0"
+}
+}
